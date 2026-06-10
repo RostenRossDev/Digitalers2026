@@ -1,5 +1,8 @@
 package Digitalers.clase1;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class Laboratorio1 {
 
     static void main() {
@@ -8,6 +11,7 @@ public class Laboratorio1 {
         ejercicio3();
         ejercicio4();
         ejercicio5();
+        ejercicio6();
     }
 
     public static void ejercicio1(){
@@ -143,8 +147,37 @@ public class Laboratorio1 {
 
     public static void ejercicio6(){
         System.out.println("################### ejercicio 6");
+//        Haciendo uso de la constante IVA=21, calcular
+//        el precio con IVA de los siguientes productos
+//        e informar:
+//        a) remera:59.90$
+//        b) pantalón:99.90$
+//        c) campera:149.90$
 
+//miValor * ivaPorcentaje
+        final int IVA = 21;
+        final double IVA_PORCENTAJE = IVA / 100.00;
+        double remera = 59.90d;
+        double pantalon = 99.90d;
+        double campera = 149.90d;
+        //#### a)
 
+        double remeraFinal = remera + ( remera * IVA_PORCENTAJE);
+        System.out.println("Iva de la remera: " + (remera * IVA_PORCENTAJE));
+        BigDecimal remeraFinalRedondeada = new BigDecimal(remera * IVA_PORCENTAJE);
+        System.out.println("Precio final de la remera: " + remeraFinalRedondeada.setScale(2, RoundingMode.HALF_UP));
 
+        //#### a)
+
+        double pantalonFinal = pantalon + ( pantalon * IVA_PORCENTAJE);
+        System.out.println("Iva de la pantalon: " + (pantalon * IVA_PORCENTAJE));
+        BigDecimal pantalonFinalRedondeada = new BigDecimal(pantalon * IVA_PORCENTAJE);
+        System.out.println("Precio final de la pantalon: " + pantalonFinalRedondeada.setScale(2, RoundingMode.HALF_UP));
+
+        //#### a)
+        double camperaFinal = campera + ( campera * IVA_PORCENTAJE);
+        System.out.println("Iva de la campera: " + (campera * IVA_PORCENTAJE));
+        BigDecimal camperaFinalRedondeada = new BigDecimal(campera * IVA_PORCENTAJE);
+        System.out.println("Precio final de la campera: " + camperaFinalRedondeada.setScale(2, RoundingMode.HALF_UP));
     }
 }
