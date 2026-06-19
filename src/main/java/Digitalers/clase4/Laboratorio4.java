@@ -13,10 +13,10 @@ public class Laboratorio4 {
         Scanner sc = new Scanner(System.in);
         System.out.println("Ingrese una frase/palabra por teclado: ");
         String frase = sc.nextLine();
+        long inicio = System.currentTimeMillis();
         String[] apariciones = new String[aparicionesLegnth]; // {i, z, e, x. ...}
         Integer[] repeticiones = new Integer[aparicionesLegnth]; // {1, 4, 2, 1 ...}
         Integer[] repeticionesMaximasIndices = new Integer[apariciones.length];
-
         int longitud = frase.length();
 
         String letra = String.valueOf(frase.charAt(0)); //Obtengo el caracter en el indice que valga 'i' en forma de String
@@ -74,7 +74,9 @@ public class Laboratorio4 {
                 repeticionesMaximasSiguiente++;
             }
         }
-
+        long fin = System.currentTimeMillis();
+        long tiempo = fin - inicio;
+        System.out.println("Tiempo de proceso: " + tiempo + "ms");
         System.out.println("Maximo de repeticiones: " + mayorAparicion);
         System.out.println("Las letras que mas se repiten son: ");
         for (int i = 0; i < repeticionesMaximasSiguiente; i++) {

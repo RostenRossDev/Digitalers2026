@@ -6,14 +6,20 @@ import java.math.RoundingMode;
 public class Laboratorio1 {
 
     static void main() {
+        saludo("Nestor");
         ejercicio1();
         ejercicio2();
         ejercicio3();
         ejercicio4();
         ejercicio5();
         ejercicio6();
+        String apellido = "Cotantini";
+        saludo(apellido);
     }
 
+    public static void saludo(String nombre){
+        System.out.println("Hola " + nombre);
+    }
     public static void ejercicio1(){
 //  Si variableA, variableB y variableC son de tipo lógicas
 //  o boolean, ¿qué valores deben poseer para que las
