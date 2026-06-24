@@ -1,5 +1,7 @@
 package Digitalers.clase4;
 
+import Digitalers.clase5.Integrador;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

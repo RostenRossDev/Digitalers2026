@@ -1,11 +1,12 @@
 package Digitalers.clase5;
 
-import java.util.Arrays;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class clase5 {
     static void main() {
+
+        String usuario = Integrador.usuarioInput;
+
         //################### Arreglos
 //        String[] alumnos = new String[5]; //Inicializa todos sus valores en NULL
 //        //indice del ultimo elemento de un arreglo es su largo menos 1 (alumnos.length - 1)
