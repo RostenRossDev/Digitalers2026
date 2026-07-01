@@ -1,9 +1,11 @@
 package Digitalers.clase5;
 
+import Digitalers.clase6.SuperPersona;
+
 import java.util.Scanner;
 
 public class clase5 {
-    static void main() {
+    static void main() throws Exception {
 
         String usuario = Integrador.usuarioInput;
 
@@ -49,7 +51,8 @@ public class clase5 {
 //        vector[0]++;
 //        System.out.println(vector[0]);
 
-
+        SuperPersona batman = new SuperPersona();
+//        batman.setNombre("lala");   Ejemplo de que NO SE PUEDE invocar directamente el atributo nombre, cuando este tiene el modificador de acceso POR DEFECTO
         //### Funciones y procedimientos
         Scanner sc = new Scanner(System.in);
         calculadora(sc);
