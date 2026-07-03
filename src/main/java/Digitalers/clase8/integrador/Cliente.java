@@ -1,25 +1,30 @@
-package Digitalers.clase6.integrador;
+package Digitalers.clase8.integrador;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Cliente {
     public static int quantity = 0;
 
     private Long id;
+    private String username;
     private String name;
     private String lastname;
     private String dni;
     private String cuit;
     private String address;
     private String email;
+    private String password;
     private LocalDate birth;
+    private List<Cuenta> cuentas; // =  new ArrayList<>();
 
     public Cliente(){
         Cliente.quantity++;
     }
 
-    public Cliente(Long id, String name, String lastname, String dni, String cuit, String address, String email) {
+    public Cliente(Long id, String name, String lastname, String dni, String cuit, String address, String email, String password, String username) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
@@ -27,7 +32,9 @@ public class Cliente {
         this.cuit = cuit;
         this.address = address;
         this.email = email;
-
+        this.password = password;
+        this.username = username;
+        this.cuentas =  new ArrayList<>();
         Cliente.quantity++;
     }
 
@@ -99,7 +106,43 @@ public class Cliente {
         return Period.between(birth, LocalDate.now()).getYears();
     }
 
-    public static void saludar(){
-        System.out.println("Hola cliente...");;
+    public List<Cuenta> getCuentas() {
+        return cuentas;
+    }
+
+    public boolean agregarCuenta(Cuenta cuenta){
+        boolean existe = cuentas.stream()
+                .anyMatch(c -> c.getMoneda() == cuenta.getMoneda());
+
+        if (existe) {
+            return false;
+        }
+
+        cuentas.add(cuenta);
+        return true;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void eliminarCuenta(Cuenta cuenta){
+        this.cuentas.remove(cuenta);
+    }
+
+    public void eliminarCuenta(int indice){
+        this.cuentas.remove(indice);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

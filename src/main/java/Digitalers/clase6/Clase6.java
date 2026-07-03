@@ -80,6 +80,7 @@ public class Clase6 {
 
 //        FiguraGeometrica figuraGeometrica = new FiguraGeometrica();  // Es una clase ABSTRACTA la cual no se puede instanciar.
 
+        int numero = 52;
         Triangulo triangulito = new Triangulo(3.0,1.5,4.2);
         Cuadrado cuadrito = new Cuadrado(3.0);
 
