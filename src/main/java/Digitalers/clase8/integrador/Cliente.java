@@ -21,6 +21,7 @@ public class Cliente {
     private List<Cuenta> cuentas; // =  new ArrayList<>();
 
     public Cliente(){
+        this.cuentas =  new ArrayList<>();
         Cliente.quantity++;
     }
 
