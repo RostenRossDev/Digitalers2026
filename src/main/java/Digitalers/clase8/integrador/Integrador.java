@@ -78,9 +78,9 @@ public class Integrador {
 
     public static void credentialInput(Scanner sc){
         System.out.println("Usuario: ");
-        Integrador.usuarioInput = "Usuario123"; //sc.next();
+        Integrador.usuarioInput = sc.next(); //"Usuario123";//
         System.out.println("Contraseña: ");
-        Integrador.passInput = "1234";//sc.next();
+        Integrador.passInput = sc.next(); //"1234";//
         System.out.println("Clave Token: ");
         Integrador.tokenInput = Integer.valueOf(sc.next());
     }
