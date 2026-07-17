@@ -137,7 +137,6 @@ public class Integrador {
         } else {
             exit();
         }
-
     }
 
 
@@ -416,7 +415,6 @@ public class Integrador {
 
         clientes.add(cliente2);//guardamos en la base de datos entre muchas comillas
         cuentas.add(cuenta2); //guardamos en la base de datos entre muchas comillas
-
 
     }
 }
