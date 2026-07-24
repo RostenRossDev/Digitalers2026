@@ -33,15 +33,6 @@ DESCRIBE productos;
 SHOW CHARSET
 SHOW collation
 
-CREATE TABLE Medida (medida ENUM('pequeño', 'mediano', 'grande') NOT NULL DEFAULT 'mediano');
-
-
-
-select * from comercioit.medida m
-select * from comercioit.letra m
-
-    INSERT INTO comercioit.medida (medida) VALUES('pequeño');
-
 
 
 CREATE TABLE comercioit.Letra (letra SET('a', 'b', 'c', 'd'));
@@ -129,6 +120,7 @@ CREATE TABLE IF NOT EXISTS `CLIENTES` (
     `FECHA_MODIFICACION` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`CLIENTE_ID`)
     );
+
 CREATE TABLE IF NOT EXISTS `DETALLES` (
                                           `DETALLE_ID` int AUTO_INCREMENT NOT NULL,
                                           `ARTICULO_ID` int NOT NULL,
@@ -138,8 +130,11 @@ CREATE TABLE IF NOT EXISTS `DETALLES` (
     `SUB_TOTAL` DECIMAL(12,2) GENERATED ALWAYS AS (CANTIDAD * PRECIO_UNITARIO) STORED,
     `FECHA_CREACION` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `FECHA_MODIFICACION` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`DETALLE_ID`)
+    PRIMARY KEY (`DETALLE_ID`),
+    -- FOREIGN KEY (FACTURA_ID) REFERENCES FACTURAS(FACTURA_ID)
     );
+
+
 
 CREATE INDEX `idx_fecha` ON `FACTURAS` (`FECHA`);
 
@@ -156,45 +151,17 @@ ALTER TABLE `DETALLES` ADD CONSTRAINT `chk_cantidad` CHECK (`CANTIDAD` > 0);
 ALTER TABLE `ARTICULOS` ADD CONSTRAINT `chk_stock` CHECK (`STOCK` >= 0);
 
 
+
 ALTER TABLE ARTICULOS ADD COLUMN OBSERVACIONES VARCHAR(50) NULL;
-
-
-ALTER TABLE clientes ADD COLUMN Primera VARCHAR(50) NULL FIRST;
-
-ALTER TABLE clientes ADD COLUMN Siguiente VARCHAR(50) NULL AFTER COMENTARIO;
-
-ALTER TABLE articulos
-    CHANGE OBSERVACIONES COMENTARIOS VARCHAR(40) NULL;
-
-ALTER TABLE articulos MODIFY COMENTARIOS TEXT NULL;
-
-ALTER TABLE clientes DROP COLUMN Primera;
-ALTER TABLE clientes DROP COLUMN Siguiente;
-
-ALTER TABLE clientes DROP COLUMN Primera, DROP COLUMN Siguiente;
-
-ALTER TABLE ARTICULOS RENAME PRODUCTOS;
-RENAME TABLE ARTICULOS TO PRODUCTOS;
-
-ALTER TABLE PRODUCTOS DROP Primary Key;
-ALTER TABLE Articulos ADD Primary Key(ArticuloID);
-
-ALTER TABLE detalles DROP FOREIGN KEY DETALLES_fk1;
-ALTER TABLE detalles ADD CONSTRAINT DETALLES_fk1 FOREIGN KEY(ARTICULO_ID) REFERENCES PRODUCTOS(ARTICULO_ID);
-
-select * from articulos
-
-select * from PRODUCTOS
-
-select * from clientes
 
 
 -- ####################################
 
+
 -- =============================================
 -- 0. Limpieza inicial
 -- =============================================
-    SET FOREIGN_KEY_CHECKS = 0;
+SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE DETALLES;
 TRUNCATE TABLE FACTURAS;
 TRUNCATE TABLE ARTICULOS;
@@ -370,3 +337,350 @@ SELECT
     (SELECT COUNT(*) FROM ARTICULOS) AS Articulos,
     (SELECT COUNT(*) FROM FACTURAS) AS Facturas,
     (SELECT COUNT(*) FROM DETALLES) AS Detalles;
+
+
+
+
+-- ##########################################################################   Martes 21  de JULIO ##################################
+
+-- crear tabla TECNO_DB y ejecutar Los creates anteriores.
+USE TECNO_DB;
+
+
+
+-- ######   #######
+
+CREATE PROCEDURE actualizarLocalidades()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DECLARE maxId INT;
+SELECT MAX(CLIENTE_ID)
+INTO maxId
+FROM CLIENTES;
+WHILE i <= maxId DO
+UPDATE CLIENTES
+SET LOCALIDAD_ID = FLOOR(RAND() * 6) + 1
+WHERE CLIENTE_ID = i;
+
+SET i = i + 1;
+END WHILE;
+END;
+
+USE TECNO_DB;
+CALL actualizarLocalidades();
+SHOW CREATE PROCEDURE actualizarLocalidades;
+-- #####################
+
+SHOW DATABASES;
+select * from clientes
+select * from localidades
+-- SHOW TABLES
+
+    DESCRIBE CLIENTES;
+
+
+ALTER TABLE FACTURAS MODIFY COLUMN MONTO decimal(12,2) UNSIGNED;
+
+ALTER TABLE ARTICULOS MODIFY COLUMN NOMBRE VARCHAR(75) ;
+ALTER TABLE ARTICULOS MODIFY COLUMN PRECIO decimal(12,2) unsigned not NULL;
+ALTER TABLE ARTICULOS MODIFY COLUMN STOCK int(11) unsigned not NULL;
+
+
+ALTER TABLE CLIENTES MODIFY COLUMN NOMBRE varchar(30) not NULL;
+ALTER TABLE CLIENTES MODIFY COLUMN APELLIDO varchar(35) not NULL;
+ALTER TABLE CLIENTES CHANGE  COLUMN COMENTARIO OBSERVACIONES varchar(255) not NULL;
+ALTER TABLE CLIENTES ADD COLUMN LOCALIDAD_ID INT NOT NULL;
+
+
+
+
+-- Creamos registros en la tabla localidades
+INSERT INTO tecno_db.localidades (NOMBRE, CP, PROVINCIA, FECHA_CREACION, FECHA_MODIFICACION) VALUES('Resistencia', '3500', 'Chaco', current_timestamp(), current_timestamp());
+INSERT INTO tecno_db.localidades (NOMBRE, CP, PROVINCIA, FECHA_CREACION, FECHA_MODIFICACION) VALUES('San Nicolas', '7563', 'Buenos Aires', current_timestamp(), current_timestamp());
+INSERT INTO tecno_db.localidades (NOMBRE, CP, PROVINCIA, FECHA_CREACION, FECHA_MODIFICACION) VALUES('Corrientes', '6527', 'Corrientes', current_timestamp(), current_timestamp());
+INSERT INTO tecno_db.localidades (NOMBRE, CP, PROVINCIA, FECHA_CREACION, FECHA_MODIFICACION) VALUES('Muñiz', '8636', 'Buenos Aires', current_timestamp(), current_timestamp());
+INSERT INTO tecno_db.localidades (NOMBRE, CP, PROVINCIA, FECHA_CREACION, FECHA_MODIFICACION) VALUES('Rosario', '3652', 'Santa Fe', current_timestamp(), current_timestamp());
+INSERT INTO tecno_db.localidades (NOMBRE, CP, PROVINCIA, FECHA_CREACION, FECHA_MODIFICACION) VALUES('Corcovado', '8689', 'Chubut', current_timestamp(), current_timestamp());
+
+
+
+
+-- Creamos un procedimiento/funcion  que actualiza los valores de la columna localidades_id de la tabla cliente
+CREATE PROCEDURE actualizarLocalidades()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DECLARE maxId INT;
+SELECT MAX(CLIENTE_ID)
+INTO maxId
+FROM CLIENTES;
+WHILE i <= maxId DO
+UPDATE CLIENTES
+SET LOCALIDAD_ID = FLOOR(RAND() * 6) + 1
+WHERE CLIENTE_ID = i;
+
+SET i = i + 1;
+END WHILE;
+END;
+
+USE TECNO_DB;
+CALL actualizarLocalidades(); -- Invocamos la funcion previamentecreada
+
+
+-- Agregamos la restriccion de FOREING KEY O FK para relacionar la tabla LOCALIDADES con la de CLIENTES
+ALTER TABLE CLIENTES ADD CONSTRAINT FK_CLIENTES_LOCALIDADES FOREIGN KEY (LOCALIDAD_ID) REFERENCES LOCALIDADES(LOCALIDAD_ID);
+
+
+-- ####################################################################################################
+
+
+
+CREATE TABLE Clientes_nombre
+SELECT c.cliente_id, c.nombre FROM Clientes c;
+
+
+SELECT * FROM Clientes where localidad_id = 1;
+SELECT * FROM localidades;
+SELECT * FROM FACTURAS;
+
+CREATE TABLE Clientes_resistencia
+SELECT * FROM Clientes WHERE localidad_id = '1';
+
+drop table clientes_copia
+drop table clientes_nombre
+drop table clientes_resistencia
+
+
+
+UPDATE Tabla SET Campo1 = Valor1 WHERE Campo = 'Valor';
+
+update clientes set localidad_id = 1 where cliente_id = 5
+
+update clientes set localidad_id = 2, observaciones = 'Se volvio a mudar, a buenos aires porque se caso' where cliente_id = 5
+
+update clientes set localidad_id = 6 where localidad_id = 1
+
+
+    INSERT INTO CLIENTES (NOMBRE, APELLIDO, CUIT, DIRECCION, observaciones, localidad_id) VALUES
+    ('TEST', 'TESTEO', '20123556789', 'Av. Siempre Viva 123', 'Cliente DE TESTEO', 1)
+
+
+INSERT INTO FACTURAS (NUMERO, LETRA, CLIENTE_ID, FECHA, MONTO) values (50000, 'c', 42, current_timestamp(), 100 )
+
+
+
+SELECT * FROM Clientes where cliente_id = 28;
+
+DELETE FROM clientes WHERE cliente_id = 42;
+DELETE FROM clientes WHERE cliente_id = 28;
+
+-- ####################################### clase del Jueves 23 de JULIO del 2026 #######################################
+
+
+use tecno_db
+
+
+CREATE TABLE IF NOT EXISTS CATEGORIA (
+                                         CATEGORIA_ID INT NOT null auto_increment,
+                                         NOMBRE VARCHAR(50) NOT NULL,
+    DESCRIPCION VARCHAR(255),
+    PRIMARY KEY (CATEGORIA_ID)
+    );
+
+select * from categoria c
+
+alter table ARTICULOS add column CATEGORIA_ID INT not null
+
+
+    insert into categoria (NOMBRE, DESCRIPCION) values ('COMPUTACION','Articulos de computadora.')
+insert into categoria (NOMBRE, DESCRIPCION) values ('ELECTRONICOS','Articulos electronicos varios')
+insert into categoria (NOMBRE, DESCRIPCION) values ('TELEVISORES','Televisores y cualquier dispositivo para ver imagenes.')
+insert into categoria (NOMBRE, DESCRIPCION) values ('IMPRESORAS','Impresoras y sus artuculos.')
+insert into categoria (NOMBRE, DESCRIPCION) values ('OFICINAS','Articulos de oficinas varios.')
+insert into categoria (NOMBRE, DESCRIPCION) values ('ARTE','Articulos para dibujos, esculturas y demas obras de arte.')
+insert into categoria (NOMBRE, DESCRIPCION) values ('QUIMICA','Articulos para la produccion de meta.')
+
+
+SELECT * FROM tecno_db.articulos WHERE Nombre LIKE "pr%";
+SELECT * FROM tecno_db.articulos a where a.categoria_id = 1
+
+update ARTICULOS a set CATEGORIA_ID = 1 where a.articulo_id in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)  -- COMPUTACION
+update ARTICULOS a set CATEGORIA_ID = 2 where a.articulo_id in (21,22) -- ELECTRONICOS
+update ARTICULOS a set CATEGORIA_ID = 3 where a.articulo_id in (23,24) -- TELEVISORES
+update ARTICULOS a set CATEGORIA_ID = 4 where a.articulo_id in (25,26,27,28)  -- IMPRESORAS
+update ARTICULOS a set CATEGORIA_ID = 5 where a.articulo_id in (29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48) -- OFICINAS
+update ARTICULOS a set CATEGORIA_ID = 6 where a.articulo_id in (49,50,51,52,53,54,55,56) -- ARTE
+update ARTICULOS a set CATEGORIA_ID = 7 where a.articulo_id in (57,58,59,60) -- QUIMICA
+
+ALTER TABLE `ARTICULOS` ADD CONSTRAINT `ARTICULOS_fk1` FOREIGN KEY (`CATEGORIA_ID`) REFERENCES `categoria`(`CATEGORIA_ID`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+
+
+
+SELECT COUNT(*) FROM articulos WHERE Nombre LIKE "pr%";
+SELECT categoria_id, SUM(Stock) FROM articulos a where a.categoria_id = 1 ;
+
+SELECT MIN(Precio) FROM articulos;
+SELECT MAX(Precio) FROM articulos;
+SELECT AVG(Precio) FROM articulos;
+SELECT AVG(Precio) FROM articulos  a where a.categoria_id = 2;
+
+SELECT categoria_id, SUM(Stock) FROM articulos GROUP BY categoria_id having SUM(Stock) > 250;
+SELECT categoria_id, SUM(Stock) FROM articulos GROUP BY categoria_id having SUM(Stock) < 100;
+SELECT categoria_id, SUM(Stock) FROM articulos GROUP BY categoria_id having SUM(Stock) = 18;
+SELECT categoria_id, SUM(Stock) FROM articulos GROUP BY categoria_id having SUM(Stock) <> 18;
+
+
+
+select LOCALIDAD_ID, COUNT(*) AS CANTIDAD_CLIENTES FROM CLIENTES GROUP BY LOCALIDAD_ID;
+
+
+SELECT
+    ARTICULO_ID,
+    NOMBRE,
+    PRECIO,
+    STOCK,
+    FECHA_CREACION,
+    FECHA_MODIFICACION,
+    OBSERVACIONES,
+    CATEGORIA_ID,
+    NULL AS CLIENTE_ID,
+    NULL AS NOMBRE_CLIENTE,
+    NULL AS APELLIDO,
+    NULL AS CUIT,
+    NULL AS DIRECCION,
+    NULL AS OBS_CLIENTE,
+    NULL AS LOCALIDAD_ID
+FROM ARTICULOS
+
+UNION ALL
+
+SELECT
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    CLIENTE_ID,
+    NOMBRE,
+    APELLIDO,
+    CUIT,
+    DIRECCION,
+    OBSERVACIONES,
+    LOCALIDAD_ID
+FROM CLIENTES;
+
+
+
+
+SELECT * FROM articulos, categoria;
+
+
+SELECT * FROM articulos, categoria
+WHERE articulos.categoria_id = categoria.categoria_id;
+
+
+
+-- SELECT * FROM tabla1 LEFT JOIN tabla2 ON tabla1.codigo = tabla2.codigo;      SELECT * FROM tabla2 RIGHT JOIN  tabla1 ON tabla1.codigo = tabla2.codigo;
+
+
+
+-- SELECT * FROM tabla1 RIGHT JOIN tabla2 ON tabla1.codigo = tabla2.codigo;   SELECT * FROM tabla2 LEFT JOIN  tabla1 ON tabla1.codigo = tabla2.codigo;
+
+
+-- SELECT * FROM tabla1 CROSS JOIN tabla2;
+
+
+SELECT * from FACTURAS where CLIENTE_ID = 11
+
+select * from DETALLES where FACTURA_ID in (121,122,123,124,125,126,127,128,129,130,131)
+select DISTINCT ARTICULO_ID from DETALLES where DETALLE_ID in (481,482,483,484,485,486,487,488,489,490,491,492,493,494,495,496,497,498,499,500,501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523,524)
+select * from ARTICULOS where ARTICULO_ID in (21,53,58,1,59)
+
+
+
+select DISTINCT a.* FROM ARTICULOS a
+                             INNER JOIN DETALLES d
+                                        ON a.ARTICULO_ID = d.ARTICULO_ID
+                             INNER JOIN FACTURAS f
+                                        ON d.FACTURA_ID = f.FACTURA_ID
+WHERE f.CLIENTE_ID = 11;
+
+
+
+
+select * from localidades
+
+-- ############## iNTEGRADOR #######################
+
+-- ejercicio A
+
+SELECT * FROM articulos, categoria
+WHERE articulos.categoria_id = categoria.categoria_id;
+
+
+SELECT * FROM CLIENTES c, LOCALIDADES l
+WHERE c.localidad_id = l.localidad_id;
+
+
+SELECT * FROM CLIENTES c, LOCALIDADES l
+WHERE c.localidad_id = l.localidad_id and c.apellido like 'G%' and l.provincia = 'Buenos Aires'
+
+
+
+
+SELECT
+    ARTICULO_ID,
+    NOMBRE,
+    STOCK,
+    NULL AS DETALLE_ID,
+    NULL AS FACTURA_ID,
+    NULL AS CANTIDAD,
+    'ARTICULO' AS ORIGEN
+FROM ARTICULOS
+WHERE STOCK > 50
+
+UNION ALL
+
+SELECT
+    d.ARTICULO_ID,
+    NULL AS NOMBRE,
+    NULL AS STOCK,
+    d.DETALLE_ID,
+    d.FACTURA_ID,
+    d.CANTIDAD,
+    'DETALLE' AS ORIGEN
+FROM DETALLES d
+         INNER JOIN ARTICULOS a
+                    ON d.ARTICULO_ID = a.ARTICULO_ID
+WHERE a.STOCK > 50;
+
+
+
+-- ejercicio B
+
+select * from clientes c
+                  inner join localidades l on c.localidad_id = l.localidad_id
+
+
+select * from facturas f
+                  inner join detalles d on f.factura_id = d.factura_id
+
+
+select f.*, d.*, a.nombre as articulo from facturas f
+                                               inner join detalles d on f.factura_id = d.factura_id
+                                               inner join articulos a on d.articulo_id = a.articulo_id
+
+
+select f.* from facturas f
+                    inner join clientes c  on c.cliente_id = f.cliente_id
+where c.apellido = 'Garcia'
+
+
+select a.* from facturas f
+                    inner join clientes c  on c.cliente_id = f.cliente_id
+                    inner join detalles d on d.factura_id = f.factura_id
+                    inner join articulos a on a.articulo_id = d.articulo_id
+where c.apellido = 'López'
