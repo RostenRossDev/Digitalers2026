@@ -9,8 +9,15 @@ import java.util.*;
 
 public class Main {
 
-
     static void main() {
+/*
+        Long.MAX_VALUE  ->> BIGINT
+        Integer.MAX_VALUE  ->> INT
+        Short.MAX_VALUE  ->> SMALLINT
+        Byte.MAX_VALUE --> SOLO LAMITAD DE UN TINYINT
+*/
+
+        List<String> alumnoos = new ArrayList<>();
 
         Lista<String> alumnos = new Lista<>("Nestor");
         alumnos.agregar("Matias");
