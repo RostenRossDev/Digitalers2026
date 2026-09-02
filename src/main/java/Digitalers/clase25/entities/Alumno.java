@@ -1,9 +1,6 @@
 package Digitalers.clase25.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -12,4 +9,27 @@ import lombok.Setter;
 public class Alumno extends Persona {
     private Long alumnoId;
     private Long legajo;
+
+    public Alumno(String nombre, String apellido, String dni, String direccion, String telefono, String correo){
+        setNombre(nombre);
+        setApellido(apellido);
+        setDocumento(dni);
+        setDireccion(direccion);
+        setTelefono(telefono);
+        setCorreo(correo);
+        setLegajo(Long.parseLong(generarNumeroAleatorio()));
+    }
+
+    @Override
+    public String toString() {
+        return "Alumno{" +
+                "legajo=" + legajo +
+                ", alumnoId=" + alumnoId +
+                super.toString() +
+                '}';
+    }
+
+    private String generarNumeroAleatorio() {
+        return ((int) (Math.random() * 9000) + 1000) + "";
+    }
 }

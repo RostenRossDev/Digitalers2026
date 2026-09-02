@@ -11,10 +11,9 @@ public interface ConexionMySql {
 
         try {
             final String DRIVER = "";
-            final String URL = "";
-            final String USER = "";
+            final String URL = "jdbc:mysql://localhost:3306/universidad";
+            final String USER = "root";
             final String PASS = "";
-
 
             conn = DriverManager.getConnection(URL, USER, PASS);
         } catch (SQLException e) {
