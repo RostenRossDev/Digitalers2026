@@ -15,7 +15,7 @@ public class Main {
         try {
             alumnoDao.insertar(a);
             System.out.println("Esperando ....");
-            Long legajo = 6488L;
+            Long legajo = 648L;
             Alumno a2 = alumnoDao.buscarPorLegajo(legajo);
             System.out.println(a2);
         } catch (SQLException e) {

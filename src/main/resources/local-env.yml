@@ -1,0 +1,5 @@
+db:
+  url: jdbc:mysql://localhost:3306/universidad2
+  data:
+    user: root
+    pass:

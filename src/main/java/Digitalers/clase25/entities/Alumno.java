@@ -2,6 +2,8 @@ package Digitalers.clase25.entities;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -9,7 +11,7 @@ import lombok.*;
 public class Alumno extends Persona {
     private Long alumnoId;
     private Long legajo;
-
+    private List<Curso> cursos;
     public Alumno(String nombre, String apellido, String dni, String direccion, String telefono, String correo){
         setNombre(nombre);
         setApellido(apellido);
